@@ -103,7 +103,7 @@ meaning we want, using a line, separate these red points from green ones:
 
 With a linear function, we can only produce linear decisions no matter the size of the network,
 meaning we can only draw a strict line (1st image). But non-linearity allows us to approximate
-arbitrarily complex function, so end up with such of line in the second image.
+arbitrarily complex function, so end up with such of seperation in the second image.
 
 <p align="center"><img src="./images/red_green_points_2.png"/></p>
 
@@ -329,7 +329,7 @@ The gradient is a set of “slopes” that tells you, for each weight, whether t
 > meaning that the gradient acts on each weight
 
 **E.g.:**\
-Let's suppose the loss depends on a single weight then the loss `J(w) = (w-3)^2` for a target `y = 3`.\
+Let's suppose the loss depends on a single weight, then the loss `J(w) = (w-3)^2` for a target `y = 3`.\
 The formula `J(w) = (w-3)^2` is obteined by simplifying the formula of `J(W)` using:
 - only one parameter, then a sigle weight `w`
 - only one training example, then `n = 1`
@@ -339,16 +339,16 @@ The formula `J(w) = (w-3)^2` is obteined by simplifying the formula of `J(W)` us
 So at w = 5, the loss is `J(5) = (5-3)^2 = 4.`\
 The gradient (here, just the slope) is the derivative: `dJ/dw = 2(w-3)`\
 Meaning that at w=5, `dJ/dw = 2(w-3) = 2(5-3) = 4 > 0`\
-`dJ/dw > 0` so to lower the loss, we'll decrese `w`:\
-<p align="center"><img src="./images/w_new_formula.png"/></p>
-<p align="center">w<sub>new</sub> = w<sub>old</sub> - n(J(w))= w<sub>old</sub> - n(dJ/dw<sub>old</sub>)</p>
+`dJ/dw > 0` so to lower the loss, we'll decrese `w`:
 <p align="center"><img src="./images/j_w_new_formula.png"/></p>
+<p align="center">w<sub>new</sub> = w<sub>old</sub> - n(J'(w))= w<sub>old</sub> - n(dJ/dw<sub>old</sub>)</p>
+<p align="center"><img src="./images/w_new_formula.png"/></p>
 <p>For the learning rate n = 0.1, w<sub>new</sub> = 5 - 0.1(4) = 4.6</p>
 <p>And with that, now the loss is J(4.6) = (4.6 - 3)^2 = 2.56 which is smaller than J(5) = 4.</p>
 
-That’s gradient descent in action.
+> 👆 That’s gradient descent in action.
 
-Rule of thumb:\
+Rule of thumb:
 - Sign: positive slope → move weight down; negative slope → move up.
 - Size: big slope → take a bigger correction (scaled by the learning rate n).
 
@@ -358,17 +358,17 @@ With many weights, the gradient is a list of slopes. For W(w1, w2, ...),
 And as we understood ealier, the gradient acts on each weight so we'll have to update all weights at once:
 <p align="center"><img src="./images/w_new_new_formula.png"/></p>
 
-Modern libraries compute these slopes for you automatically using backpropagation (automatic differentiation).
+Modern libraries compute these slopes automatically using backpropagation (automatic differentiation).
 
-#### How do we determinate the learning rate:
+#### How do we determinate the learning rate
 <p align="center"><img src="./images/learning_rate.png"/></p>
 
-Ealier, we used `n=0.1` but we could use `n=0.4`.
+Ealier, we used `n=0.1` but we could use `n=0.4` (hmmm... we can, but maybe not. Let's get to it later).
 
 
 #### Epoch, Batch
 
-Epoch is one full pass through the entire training dataset during training.\
+Epoch is one full pass through the entire training dataset during the training.\
 **E.g.:**\
 Giving 10,000 training examples. One epoch means the model has seen all 10,000 examples once
 (possibly in mini-batches).
@@ -379,7 +379,7 @@ However, training doesn’t usually feed the entire dataset at once (that wouldn
 Instead, we split it into **mini-batches**, a small subset of the data processed in one go (e.g.,
 32 samples).
 
-**Iteration/Step:** one parameter/weight update after processing a single batch.\
+**Iteration/Step:** one parameter/weight update after processing a single batch.
 
 ##### Concrete example
 
@@ -402,7 +402,7 @@ Instead, we split it into **mini-batches**, a small subset of the data processed
   - Callbacks may trigger (e.g., EarlyStopping, ReduceLROnPlateau).
   - Learning-rate schedules may update at the epoch boundary.
 
-We keep traking those metrics (prediction, loss,...) per epoch because gives a clean, big-picture
+We keep traking those metrics (prediction, loss,...) per epoch because they give a clean, big-picture
 curve of training loss and validation loss/accuracy over time. And its where we detect phenomena
 like overfitting and underfitting.
 
@@ -411,7 +411,17 @@ like overfitting and underfitting.
 - **Overfitting**: as epochs go by, the training loss goes down, and the validation loss goes up
   (low training loss, high validation loss) → meaning that the model is memorizing the training data
   while failing on new data.\
-  How to fix it: 1. Simplify the model (fewer layers/units). 2. Regularize: - Dropout (e.g., 0.2–0.5 between dense layers). - L2 weight decay (a small value like 1e-4). 3. Early stop when validation loss stops improving. 4. More/augmented data (flip/rotate images, etc.).
+  How to fix it: 
+  1. Simplify the model (fewer layers/units). 
+  2. Regularize: 
+    - Dropout (e.g., 0.2–0.5 between dense layers). 
+    - L2 weight decay (a small value like 1e-4). 
+  3. Early stop when validation loss stops improving. 
+  4. More/augmented data (flip/rotate images, etc.).
 
 - **Underfitting**: high training and validation loss → meaning that the model is too simple/not
-  trained enough, not learning enough patterns. 1. Bigger model (more units/layers). 2. Train longer (more epochs). 3. Reduce regularization (lower dropout/L2). 4. Slightly higher learning rate (so it can learn faster), if it’s too small.
+  trained enough, not learning enough patterns. 
+  1. Bigger model (more units/layers). 
+  2. Train longer (more epochs). 
+  3. Reduce regularization (lower dropout/L2). 
+  4. Slightly higher learning rate (so it can learn faster), if it’s too small.
