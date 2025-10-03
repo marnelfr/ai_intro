@@ -321,10 +321,18 @@ There two kinds of loss
 
 The **empirical loss** measures the total loss over our entire dataset, the average penalty my
 model pays across the whole training set:
-
 <p align="center">J(W)=1/n(∑<sup>n</sup><sub>i=1</sub>(L(f(x(i);W),y(i)))</p>
 
-### Grandient
+We've got different type of losses.\
+For example, for binary classification (yes/no), we use the **soft cross entropy loss**:
+<p align="center"><img src="./images/cross_entropy_loss_formula.png"/></p>
+
+Instead, the **Mean squared error loss** can be used with regression models that output continuous 
+real numbers:
+<p align="center"><img src="./images/mean_squared_error_loss_formula.png"/></p>
+
+
+### Computing Grandients
 The gradient is a set of “slopes” that tells you, for each weight, whether to move it up or down (and by how much) to make the loss smaller.
 > meaning that the gradient acts on each weight
 
@@ -360,11 +368,55 @@ And as we understood ealier, the gradient acts on each weight so we'll have to u
 
 Modern libraries compute these slopes automatically using backpropagation (automatic differentiation).
 
+
+#### Computing Grandients: Backpropagation
+<p align="center"><img src="./images/backpropagation_graph_example.png"/></p>
+
+Given this simple neuron network, we want to compute the gradient `J(W)` at the end.\
+Let's start by apply the chain rule to determinate how does a small change in one weight (`w2`) affect our 
+the final loss: 
+<p align="center"><img src="./images/computing_gradient_for_w2.png"/></p>
+
+Applying the same chain rule to compute the grandient before `w2`, will give us:
+<p align="center"><img src="./images/computing_gradient_for_w1.png"/></p>
+
+Introducing z<sub>1</sub> as `^y` is function of z<sub>1</sub>, will give us:
+<p align="center"><img src="./images/computing_gradient_with_z1.png"/></p>
+
+This is a way of expending, going from the output and keep computing the iterative chain rule back and back,
+that's why we talk about **backpropagation**.
+
+
 #### How do we determinate the learning rate
 <p align="center"><img src="./images/learning_rate.png"/></p>
 
-Ealier, we used `n=0.1` but we could use `n=0.4` (hmmm... we can, but maybe not. Let's get to it later).
+Ealier, we used `n=0.1` but we could use `n=0.4` (hmmm... we can, but maybe not).
 
+
+#### Setting the learning rate
+- Setting minimum rates converges slowly and gets stucks in 'false' local minima (may not really be
+the best minima):
+<p align="center"><img src="./images/learning_rate_set_slowly.png"/></p>
+
+- Setting large learning rates overshoot, became unstable and diverge:
+<p align="center"><img src="./images/learning_rate_set_largly.png"/></p>
+
+- So the idea is to set the learning rate not too small so it can converge smoothly while scaping 
+local minima
+<p align="center"><img src="./images/stable_learning_rate_set.png"/></p>
+
+And doing this can be by trying a lot of different learning rates and see what works "just right".
+Or even doing better: design an adaptive algorith, adaptive learning rate that "adapts" to 
+the landscape itself.
+> meaning that the learning rate will increase or decrease as function of 
+- how large the gradient is, 
+- how fast the learning is happening,
+- the size of particular weights
+- etc,...
+
+We have multiple adaptives (optimizer) wie can use such as Adam, Adadelta, Adagrad, RMSProp, 
+SGB (Stochastic Gradient Descent Algorith, a grandient descent compute over a mini-batch 
+(stochastic selection) instead of our whole dataset),...
 
 #### Epoch, Batch
 
@@ -377,7 +429,9 @@ Training typically runs for multiple epochs, so the model sees the same data man
 improving its weights.
 However, training doesn’t usually feed the entire dataset at once (that wouldn’t fit in memory).
 Instead, we split it into **mini-batches**, a small subset of the data processed in one go (e.g.,
-32 samples).
+32 samples).\
+That set of mini-batches (32 samples for example) lead to fast training as we can parallelize the 
+gradient computation, achieve significat speed increases on GPU's.
 
 **Iteration/Step:** one parameter/weight update after processing a single batch.
 
@@ -411,13 +465,8 @@ like overfitting and underfitting.
 - **Overfitting**: as epochs go by, the training loss goes down, and the validation loss goes up
   (low training loss, high validation loss) → meaning that the model is memorizing the training data
   while failing on new data.\
-  How to fix it: 
-  1. Simplify the model (fewer layers/units). 
-  2. Regularize: 
-    - Dropout (e.g., 0.2–0.5 between dense layers). 
-    - L2 weight decay (a small value like 1e-4). 
-  3. Early stop when validation loss stops improving. 
-  4. More/augmented data (flip/rotate images, etc.).
+  How to fix it: Simplify the model (fewer layers/units), Regularize, More/augmented data (flip/rotate
+  images, etc.).
 
 - **Underfitting**: high training and validation loss → meaning that the model is too simple/not
   trained enough, not learning enough patterns. 
@@ -425,3 +474,34 @@ like overfitting and underfitting.
   2. Train longer (more epochs). 
   3. Reduce regularization (lower dropout/L2). 
   4. Slightly higher learning rate (so it can learn faster), if it’s too small.
+<p align="center"><img src="./images/regularization_dropout.png"/></p>
+
+#### Regularization
+It's a technique that help to discourage the complex model memorization protocol in case we have a 
+small dataset and a big model (complex model) in order to improve the generalization of our model
+on unseen data.\
+We have different type of regularization techniques such as:
+- Dropout: during the training, ramdomly set some activations of our hidden neurons to 0. We do this
+on typically 50% of our activations in layer. This force the network to not rely on any `i` node.
+<p align="center"><img src="./images/regularization_dropout.png"/></p>
+
+With this, even seen the same data twice will not let the model memorize as we adding, thanks to 
+the dropout, another level of stochasticity. And even the dropout nodes are not already the same one:
+<p align="center"><img src="./images/regularization_dropout_2.png"/></p>
+
+- Early stopping: basically, we stop the model training before we have a chance to overfit:
+<p align="center"><img src="./images/regularization_earlier_stop_training.png"/></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
