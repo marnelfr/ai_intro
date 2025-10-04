@@ -124,7 +124,7 @@ where as always:
 
 <p align="center"><img src="./images/z_formula.png" width="200px"/></p>
 
-If we want to get two outputs neron network, we only have to create a second perceptron,
+If we want to get two outputs neuron network, we only have to create a second perceptron,
 so we'll have two neurons instead of one. They will use the same inputs but **because their weights
 are different**, they'll produce two different outputs:
 
@@ -321,7 +321,7 @@ There two kinds of loss
 
 The **empirical loss** measures the total loss over our entire dataset, the average penalty my
 model pays across the whole training set:
-<p align="center">J(W)=1/n(∑<sup>n</sup><sub>i=1</sub>(L(f(x(i);W),y(i)))</p>
+<p align="center">J(W)=1/n(∑<sup>n</sup><sub>i=1</sub>(L(f(x<sup>(i)</sup>;W),y<sup>(i)</sup>))</p>
 
 We've got different type of losses.\
 For example, for binary classification (yes/no), we use the **soft cross entropy loss**:
@@ -373,7 +373,7 @@ Modern libraries compute these slopes automatically using backpropagation (autom
 <p align="center"><img src="./images/backpropagation_graph_example.png"/></p>
 
 Given this simple neuron network, we want to compute the gradient `J(W)` at the end.\
-Let's start by apply the chain rule to determinate how does a small change in one weight (`w2`) affect our 
+Let's start by apply the chain rule to determinate how does a small change in one weight (`w2`) affect 
 the final loss: 
 <p align="center"><img src="./images/computing_gradient_for_w2.png"/></p>
 
@@ -394,27 +394,27 @@ Ealier, we used `n=0.1` but we could use `n=0.4` (hmmm... we can, but maybe not)
 
 
 #### Setting the learning rate
-- Setting minimum rates converges slowly and gets stucks in 'false' local minima (may not really be
+- Setting minimum rates converges slowly and gets stucks in 'false' local minima of the loss (may not really be
 the best minima):
-<p align="center"><img src="./images/learning_rate_set_slowly.png"/></p>
+<p align="center"><img width="350px" src="./images/learning_rate_set_slowly.png"/></p>
 
 - Setting large learning rates overshoot, became unstable and diverge:
-<p align="center"><img src="./images/learning_rate_set_largly.png"/></p>
+<p align="center"><img width="350px" src="./images/learning_rate_set_largly.png"/></p>
 
 - So the idea is to set the learning rate not too small so it can converge smoothly while scaping 
 local minima
-<p align="center"><img src="./images/stable_learning_rate_set.png"/></p>
+<p align="center"><img width="350px" src="./images/stable_learning_rate_set.png"/></p>
 
 And doing this can be by trying a lot of different learning rates and see what works "just right".
 Or even doing better: design an adaptive algorith, adaptive learning rate that "adapts" to 
 the landscape itself.
 > meaning that the learning rate will increase or decrease as function of 
-- how large the gradient is, 
-- how fast the learning is happening,
-- the size of particular weights
-- etc,...
+> - how large the gradient is, 
+> - how fast the learning is happening,
+> - the size of particular weights
+> - etc,...
 
-We have multiple adaptives (optimizer) wie can use such as Adam, Adadelta, Adagrad, RMSProp, 
+We have multiple adaptives (optimizer) we can use such as Adam, Adadelta, Adagrad, RMSProp, 
 SGB (Stochastic Gradient Descent Algorith, a grandient descent compute over a mini-batch 
 (stochastic selection) instead of our whole dataset),...
 
@@ -469,12 +469,13 @@ like overfitting and underfitting.
   images, etc.).
 
 - **Underfitting**: high training and validation loss → meaning that the model is too simple/not
-  trained enough, not learning enough patterns. 
+  trained enough, not learning enough patterns.\
+  How to fix it:
   1. Bigger model (more units/layers). 
   2. Train longer (more epochs). 
   3. Reduce regularization (lower dropout/L2). 
   4. Slightly higher learning rate (so it can learn faster), if it’s too small.
-<p align="center"><img src="./images/regularization_dropout.png"/></p>
+<p align="center"><img src="./images/overfitting_underfitting.png"/></p>
 
 #### Regularization
 It's a technique that help to discourage the complex model memorization protocol in case we have a 
@@ -483,14 +484,14 @@ on unseen data.\
 We have different type of regularization techniques such as:
 - Dropout: during the training, ramdomly set some activations of our hidden neurons to 0. We do this
 on typically 50% of our activations in layer. This force the network to not rely on any `i` node.
-<p align="center"><img src="./images/regularization_dropout.png"/></p>
+<p align="center"><img width="350px" src="./images/regularization_dropout.png"/></p>
 
 With this, even seen the same data twice will not let the model memorize as we adding, thanks to 
-the dropout, another level of stochasticity. And even the dropout nodes are not already the same one:
-<p align="center"><img src="./images/regularization_dropout_2.png"/></p>
+the dropout, another level of stochasticity. And even the dropout nodes should not be always the same one:
+<p align="center"><img width="350px" src="./images/regularization_dropout_2.png"/></p>
 
 - Early stopping: basically, we stop the model training before we have a chance to overfit:
-<p align="center"><img src="./images/regularization_earlier_stop_training.png"/></p>
+<p align="center"><img width="350px" src="./images/regularization_earlier_stop_training.png"/></p>
 
 
 
